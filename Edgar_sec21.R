@@ -23,7 +23,7 @@ BASE_FILE = read.csv("BASE_FILe.csv", stringsAsFactors = FALSE)  # read csv file
 ### no filings have been found over a weekend.
 ### data only returned Tuesday through Saturday morning.
 ### for testing, if Monday use Sys.Date()-3 to pull friday filings else Sys.Date()-1
-daily_sec_pull <- getDailyMaster(Sys.Date()-3)
+daily_sec_pull <- getDailyMaster(Sys.Date()-1)
 daily_10k <- subset(daily_sec_pull, FORM_TYPE=='10-K'|FORM_TYPE=='10-K/A')
 
 ### ADD THE ACCENSION NUMBER TO daily_10k dataframe
