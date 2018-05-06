@@ -55,6 +55,37 @@ for (i in 1:nrow(daily_10k)) {
   }
 }
 
+#=======!!!!!!!!!!!!!UNDER CONSTRUCTION!!!!!!!!!!!!============
+#PULL FILER DATA
+#THIS IS SCRAPING THE COMPANY DATA IN THE BLUE BOX AT
+#THE BOTTOM OF THE COMP_URL WEB PAGE
+#IT WILL BE NEEDED TO IDENTIFY THE ULTIMATE PARENT FOR SEARCH MATCH
+#===========================================================
+comp <- read_html("https://www.sec.gov/Archives/edgar/data/1281845/000107878218000497/0001078782-18-000497-index.htm")
+comp <- comp %>%
+        html_nodes("#filerDiv") %>% 
+        html_text()
+comp <- gsub("\\|","\\\n", adf)
+comp <- strsplit(adf,"\n")
+comp<- str_trim(adf[[1]],c("both"))
+comp <- as.data.frame(adf)
+colnames(comp) <- c("a")
+comp <- filter(comp,comp$a != "")
+MAIL_STREET <- comp$a[1+(grep("Mailing Address", comp$a) )]
+
+## total lenth of the city, st  postal row
+adr_len <- str_length(comp$a[(grep("Business Address", comp$a)-1)])
+
+## segments the city/st/postal row into individual values
+MAIL_CITY <- stri_reverse(stri_sub(stri_reverse(comp$a[(grep("Business Address", comp$a)-1)]),15,adr_len))
+MAIL_STATE <- stri_reverse(stri_sub(stri_reverse(comp$a[(grep("Business Address", comp$a)-1)]),11,13))
+MAIL_POSTAL <- stri_reverse(stri_sub(stri_reverse(comp$a[(grep("Business Address", comp$a)-1)]),1,10))
+
+
+
+               
+
+
 #============================================================
 #     FUNCTIONS TO SCRAPE EX 21 DATA
 #============================================================
@@ -291,3 +322,111 @@ PKY <- read_html ("https://www.sec.gov/Archives/edgar/data/1677761/0001677761170
 
 ## US AUTO PARTS ASSOCIATION [jarrod]
 APA <- read_html("https://www.sec.gov/Archives/edgar/data/1378950/000162828018003196/ex-21110xk2017.htm")
+
+#####################################################
+#
+#      MAY 1, 2018 results for filings on 4/30/2018
+#      3 Successes  1 Failure (helen of troy)
+#####################################################
+
+## JANEL CORP (MAY 1, 2018)
+JANEL <- read_html("https://www.sec.gov/Archives/edgar/data/1133062/000095015918000180/ex21.htm")
+SEC_JANEL <- table_or_text(JANEL)
+## results = success
+
+## APOGEE ENTERPRISES, INC. (MAY 1, 2018)
+APOGEE <- read_html("https://www.sec.gov/Archives/edgar/data/6845/000000684518000009/apog-ex21_20183310k.htm")
+SEC_APOGEE <- table_or_text(APOGEE)
+## results = success
+
+## Marina Biotech, Inc. (MAY 1, 2018)
+MARINA_BIO <- read_html("https://www.sec.gov/Archives/edgar/data/737207/000149315218005964/ex21-1.htm")
+SEC_MARINA_BIO <- table_or_text(MARINA_BIO)
+## results = success
+
+## HELEN OF TROY (MAY 1, 2018)
+HELEN_TROY <- read_html("https://www.sec.gov/Archives/edgar/data/916789/000155837018003549/hele-20180228ex2187ca156.htm")
+SEC_HELEN_TROY <- table_or_text(HELEN_TROY)
+join_tables(HELEN_TROY)
+## results = !!!!!failure!!!!!
+
+#####################################################
+#
+#      MAY 2, 2018 results for filings on 5/1/2018
+#      1 Successes  2 Failure (---)
+#####################################################
+## NAKED BRAND GROUP - (MAY 2, 2018)
+TEMP1 <- read_html("https://www.sec.gov/Archives/edgar/data/1383097/000114420418024496/tv492321_ex21-1.htm")
+SEC_NKD_BRND_GRP <- table_or_text(TEMP1)
+View(SEC_NKD_BRND_GRP)
+## results = SUCCESS
+
+##  Neutra Corp - (MAY 2, 2018)
+TEMP1 <- read_html("https://www.sec.gov/Archives/edgar/data/1512886/000116169718000230/ex_21.htm")
+NEUTRA_CORP <- table_or_text(TEMP1)
+View(NEUTRA_CORP)
+## results = FAILURE, GENERATED "NEED TO WRITE THIS CODE"
+
+## IPIC_ENT - (MAY 2, 2018)
+TEMP1 <- read_html("https://www.sec.gov/Archives/edgar/data/1720201/000121390018005338/f10k2017ex21-1_ipicentertain.htm")
+IPIC_ENT <- table_or_text(TEMP1)
+View(IPIC_ENT)
+## results = FAILURE, GENERATED "NEED TO WRITE THIS CODE"
+
+
+#######################################################################################################
+#####################################################
+#
+#      MAY 4, 2018 results for filings on 5/3/2018
+#      6 Successes  0 Failure (---)
+#####################################################
+View(daily_10k)
+TEMP1 <- read_html(daily_10k[10,7])
+
+IHEART_COMMUNICATIONS <- table_or_text(TEMP1)
+View(IHEART_COMMUNICATIONS)
+## results = SUCCESS
+
+IHEARTMEDIA_CAPITAL <- table_or_text(TEMP1)
+View(IHEARTMEDIA_CAPITAL)
+## results = SUCCESS
+
+IHEARTMEDIA <- table_or_text(TEMP1)
+View(IHEARTMEDIA)
+## results = SUCCESS
+
+CCOH <- table_or_text(TEMP1)
+View(CCOH)
+## results = SUCCESS
+
+COMVALUT_SYSTEMS <- table_or_text(TEMP1)
+View(COMVALUT_SYSTEMS)
+## results = SUCCESS
+
+GILLA <- table_or_text(TEMP1)
+View(GILLA)
+## results = SUCCESS
+
+#####################################################
+#
+#      MAY 5, 2018 results for filings on 5/4/2018
+#      2 Successes  1 Failure (---)
+#####################################################
+View(daily_10k)
+TEMP1 <- read_html(daily_10k[11,7])
+
+FREDS <- table_or_text(TEMP1)
+View(FREDS)
+## results = success
+
+TRANS_WORLD <- table_or_text(TEMP1)
+View(TRANS_WORLD)
+## results = success
+STEIN_MART <- table_or_text(TEMP1)
+View(STEIN_MART)
+## failure = "need to write this code"
+
+
+
+
+
