@@ -1,0 +1,33 @@
+USE [JIGSAW]
+GO
+
+/****** Object:  UserDefinedFunction [dbo].[CLEAN_NAME_SPACE]    Script Date: 5/22/2018 5:18:32 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+-- RUN USING THE FOLLOWING COMMAND
+-- Select dbo.CLEAN_NAME_SPACE(COLUMN_NAME)
+
+-- FUNCTION WILL REMOVE ALL NON ALPHA NUMERIC CHARACTERS AND REPLACE WITH A NON SPACE CHARATER.  
+-- THIS FUNCTION WILL NOT REPLACE AN EXISTING SPACE WITH A NO SPACE
+
+CREATE Function [dbo].[CLEAN_NAME_SPACE](@NAME VarChar(1000)) 
+Returns VarChar(1000) 
+AS 
+Begin
+      While PatIndex('%[^a-z  ]%', @NAME) > 0
+      Set @NAME = Stuff(@NAME, PatIndex('%[^a-z ]%', @NAME), 1, '')
+	  SET @NAME = RTRIM(LTRIM(@NAME))
+	  SET @NAME = REPLACE(@NAME,'  ',' ')
+	  Return @NAME
+
+End
+
+
+
+GO
